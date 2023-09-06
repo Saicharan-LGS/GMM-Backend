@@ -3,16 +3,18 @@ const mysql = require("mysql")
 const nodemon = require("nodemon")
 const nodemailer = require('nodemailer');
 const cors = require("cors");
+require('dotenv').config();
 const bodyParser = require('body-parser');
 const app=express()
 app.use(cors())
 app.use(bodyParser.json());
-const db=mysql.createConnection({
-  host:"localhost",
-  user:"root",
-  password:"root1234",
-  database:"gmm"
-})
+
+const db = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE
+});
 
 const tables = [
   {
@@ -83,8 +85,8 @@ db.connect((err) => {
 
 
 
-app.listen(3005, () => {
-  console.log("listening on port 3005");
+app.listen(process.env.PORT, () => {
+  console.log(`Listening on port ${process.env.PORT}`);
 });
 
 app.post('/register', (req, res) => {
@@ -108,13 +110,13 @@ app.post('/register', (req, res) => {
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
-            user: 'ecommerceapp8@gmail.com',
-            pass: 'cuesoyfbusquxakg',
+            user: process.env.SMTP_EMAIL,
+            pass: process.env.SMTP_PASSWORD,
           },
         });
 
         const mailOptions = {
-          from: 'ecommerceapp8@gmail.com',
+          from: process.env.SMTP_EMAIL,
           to: email,
           subject: 'Registration Confirmation',
           text: `Thank you for contacting us. You have selected the service: ${course}. We will get back to you soon.`,
@@ -130,10 +132,10 @@ app.post('/register', (req, res) => {
           res.json({ success: 'Thank you for Contacting us. We will get back to you soon' });
         });
 
-        // Send an email to 'abcd@gmail.com'
+        // Send an email to admin
         const mailOptionsABC = {
-          from: 'ecommerceapp8@gmail.com',
-          to: 'kapilrajreddy@gmail.com',
+          from: process.env.SMTP_EMAIL,
+          to: process.env.ADMIN_EMAIL,
           subject: 'New Registration',
           text: `A new user registered with the following details:
               Name: ${name}
@@ -189,14 +191,14 @@ app.use((err, req, res, next) => {
     const transporter = nodemailer.createTransport({
       service: 'gmail', // e.g., 'Gmail'
       auth: {
-        user: 'ecommerceapp8@gmail.com',
-        pass: 'cuesoyfbusquxakg',
+        user: process.env.SMTP_EMAIL,
+        pass: process.env.SMTP_PASSWORD,
       },
     });
   
     // Email content to the primary recipient
     const mailOptions = {
-      from: 'ecommerceapp8@gmail.com',
+      from: process.env.SMTP_EMAIL,
       to: email,
       subject: 'Hello from the Send Email API',
       text: `Dear ${name},\n\nThank you for providing your information. We will contact you soon.\n\nBest regards,\nThe Send Email API Team`,
@@ -204,8 +206,8 @@ app.use((err, req, res, next) => {
   
     // Email content to the additional recipient
     const mailOptionsABC = {
-      from: 'ecommerceapp8@gmail.com',
-      to: 'kapilrajreddy@gmail.com',
+      from: process.env.SMTP_EMAIL,
+      to: process.env.ADMIN_EMAIL,
       subject: 'Placement Team',
       text: `A new company  registered with the following details:
             Name: ${name}
@@ -259,13 +261,13 @@ app.post('/studyabroad', (req, res) => {
         const transporter = nodemailer.createTransport({
           service: 'gmail',
           auth: {
-            user: 'ecommerceapp8@gmail.com',
-            pass: 'cuesoyfbusquxakg',
+            user: process.env.SMTP_EMAIL,
+            pass: process.env.SMTP_PASSWORD,
           },
         });
 
         const mailOptions = {
-          from: 'ecommerceapp8@gmail.com',
+          from: process.env.SMTP_EMAIL,
           to: email,
           subject: 'Registration Confirmation',
           text: `Thank you for contacting us. You have selected the service: ${course}. We will get back to you soon.`,
@@ -283,8 +285,8 @@ app.post('/studyabroad', (req, res) => {
 
         // Send an email to 'abcd@gmail.com'
         const mailOptionsABC = {
-          from: 'ecommerceapp8@gmail.com',
-          to: 'kapilrajreddy@gmail.com',
+          from: process.env.SMTP_EMAIL,
+          to: process.env.ADMIN_EMAIL,
           subject: 'Study Abroad',
           text: `A new user registered with the following details:
               Name: ${name}
